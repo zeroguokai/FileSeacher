@@ -13,19 +13,19 @@ class FileVisitor:
         if reset: self.reset()
         for (thisDir, dirsHere, filesHere) in os.walk(startDir):
             self.visitdir(thisDir)
-            for fname in filesHere:                          # for non-dir files
-                fpath = os.path.join(thisDir, fname)         # fnames have no path
+            for fname in filesHere:                          
+                fpath = os.path.join(thisDir, fname)         
                 self.visitfile(fpath)
  
-    def reset(self):                                         # to reuse walker
-        self.fcount = self.dcount = 0                        # for independent walks
+    def reset(self):                                         
+        self.fcount = self.dcount = 0                        
 
-    def visitdir(self, dirpath):                             # called for each dir
-        self.dcount += 1                                     # override or extend me
+    def visitdir(self, dirpath):                             
+        self.dcount += 1                                     
         if self.trace > 0: print(dirpath, '文件夹...')
 
-    def visitfile(self, filepath):                           # called for each file
-        self.fcount += 1                                     # override or extend me
+    def visitfile(self, filepath):                           
+        self.fcount += 1                                    
         if self.trace > 1: print(self.fcount, '=>', filepath)
 
 
@@ -35,10 +35,10 @@ class SearchVisitor(FileVisitor):
         FileVisitor.__init__(self, searchkey, trace)
         self.scount = 0
 
-    def reset(self):                                         # on independent walks
+    def reset(self):                                        
         self.scount = 0
     
-    def visitdir(self, dirpath):                             # called for each dir
+    def visitdir(self, dirpath):                          
         FileVisitor.visitdir
         if re.search(self.context,dirpath):
             print('找到文件夹：%s' % dirpath)
@@ -46,14 +46,13 @@ class SearchVisitor(FileVisitor):
          
     def visitfile(self,fname):      
         FileVisitor.visitfile(self, fname) 
-        filename=os.path.split(fname)[1]                        # test for a match
+        filename=os.path.split(fname)[1]                     
         if re.search(self.context,filename):
             self.visitmatch(fname)
             self.scount += 1 
 
-    def visitmatch(self, fname):                       # process a match
-        print('找到文件：%s' % fname)                   # override me lower
-
+    def visitmatch(self, fname):                     
+        print('找到文件：%s' % fname)                
 
 if __name__ == '__main__':
     # self-test logic
